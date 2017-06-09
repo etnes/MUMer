@@ -242,7 +242,9 @@ def makeSummarySuffixArray(summaryString, summaryAlphabetSize):
     else:
         # otherwise, we have to do recursion
         summarySuffixArray = makeSuffixArrayByInducedSorting(
-            summaryString, summaryAlphabetSize)
+            summaryString,
+            summaryAlphabetSize
+        )
         
     return summarySuffixArray
 
@@ -279,7 +281,10 @@ def makeSuffixArrayByInducedSorting(string, alphabetSize):
     Comnpute the suffix array of the given string with SA-IS algorithm.
     """
 
+    # classify each character of the string as S-YTPE or L-TYPE
     typemap = buildTypeMap(string)
+
+    # slots suffixes into the buckets according to their start character
     bucketSizes = findBucketSizes(string, alphabetSize)
 
     # By using simple bucket sort, we insert all the LMS suffixes into 
