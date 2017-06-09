@@ -1,42 +1,19 @@
 from SAIS import makeSuftab
 from Util import *
+import sys
 
-def getInput(n):
-    S = ''
-    S1 = ''
-    S2 = ''
-    minimalMUMSize = 2
 
-    if n == 1:
-        minimalMUMSize = 6
-        S1 = b'ATCCGATCATTGGCAGTGCATCGGCGTAACAGTTCCACCGATCTAATGGC'
-        S2 = b'CGGCGTTTACTCCGATGGTTGGCAGTGCACCACCGATCTAATGGCCACTG' 
 
-    elif n == 2:
-        minimalMUMSize = 6
-        S1 = b'ACTGGTAGCCAGTCCGTAATCGATTCGCGAACGTCAGTAATTTGGCCATCGATCC'
-        S2 = b'GGCTGGTAGCGTACGATTCGCGCCGTAAACTGGAGGCCATCGATACGTCAGGCCC'
+def getInputFromFile(fileName):
+    inputFile = open(fileName, 'rb')
 
-    elif n == 3:
-        minimalMUMSize = 5
-        S1 = b'ATTCTAGGATTCAAGTCCAGTCGGCCGGAGGAATCGACGTAGCCATTATGCATTC'
-        S2 = b'GCAAGTGGAGTAGGAAGGCCGGTTATGCAACTCGACCAAGCCAACTCGGGGCCCC'
-
-    elif n == 4:
-        minimalMUMSize = 6
-        S1 = b'ACTTAGACTCAACCTGGCTATAATCCGATTCGGCATCACTAACTGACGTAATACG'
-        S2 = b'ACCTCCGATTCGGCATCACTAACTGACGTAATACGGTAGTTAGACCATCTGGCTA'
-
-    elif n == 5:
-        # output of this example is incorrect because MUMs are overlapping!
-        minimalMUMSize = 17
-        S1 = b'ACTTCAGTCAGGACTACCGATTAACGATTACGCGATCAAC'
-        S2 = b'CAGTCAGGACTACCGATTGGATACCGATTAACGATTACGCGGCTCA'
-
-    else: return getInput(1) # default input 
-
+    minimalMUMSize = int(inputFile.readline().strip())
+    S1 = inputFile.readline().strip()
+    S2 = inputFile.readline().strip()
     S = S1 + b'#' + S2 + b'$'
     splitIndex = len(S1)
+
+    inputFile.close()
 
     return S1, S2, S, minimalMUMSize, splitIndex
 
@@ -48,8 +25,12 @@ def getInput(n):
 ##                                                                    ##
 ########################################################################
 
-input = 2
-S1, S2, S, minimalMUMSize, splitIndex = getInput(input)
+# getting input file name 
+if (len(sys.argv) != 2):
+    print('Illegal input! Program takes exactly one argument.')
+    exit(1)
+
+S1, S2, S, minimalMUMSize, splitIndex = getInputFromFile(sys.argv[1])
 
 suftab = makeSuftab(S)
 
@@ -64,12 +45,17 @@ bwttab = bwttabFromSuftab(S, suftab)
 maximas = findSupermaximals(lcptab, suftab, bwttab, minimalMUMSize, splitIndex)
 
 # filteriing MUMs 
+#for sorting can be used linear time radix sort
 maximas.sort(key = lambda t : t[1])
 finalMUMs = longestIncreasingSequence(maximas)
 
 (alignedS1, alignedS2) = createAlignedGenomes(S1, S2, finalMUMs)
-print('\n', alignedS1)
-print('\n', alignedS2, '\n')
+print()
+print(S1)
+print(S2, '\n')
+print(alignedS1)
+print(alignedS2)
+print()
 
 
 
