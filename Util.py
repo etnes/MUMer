@@ -35,7 +35,7 @@ def bwttabFromSuftab(S, suftab):
     bwttab = []
     for i in range(len(suftab)):
         if (suftab[i] == 0): 
-            bwttab.append(' ')
+            bwttab.append('$')
         else: 
             bwttab.append(S[suftab[i] - 1])
     
@@ -91,32 +91,78 @@ def ceilIndex(T, mum, maximas):
 
 
 def longestIncreasingSequence(maximas):
-    T = [0] # T[i] represents index of the smallest element in LIS of length i + 1
-    R = [-1] * len(maximas)
+    """
+    Method takes list of maximas (tuple of (MUM_lenght, position_in_S1, position_in_S2))
+    that are sorted ascending by the position_in_S1.
+    Algorithm finds longest increasing sequnce of the array represented by 
+    the positio_in_S2.
+    """
+
+    # T[i] represents index of the smallest element in LIS of length i + 1 
+    T = [0] # initialization
+    R = [-1] * len(maximas) # used to reconstruct LIS
+    L = [0] * len(maximas) # stores length of LIS that ends in i-th element
+    L[0] = maximas[0][0] # initialization
 
     for i in range(1, len(maximas)):
         mum = maximas[i]
 
         if (mum[2] < maximas[T[0]][2]):
+            L[i] = mum[0]
             T[0] = i
 
         elif (mum[2] > maximas[T[-1]][2]):
             R[i] = T[-1]
+            L[i] = L[T[-1]] + mum[0]
             T.append(i)
 
         else:
             index = ceilIndex(T, mum, maximas)
             R[i] = T[index - 1]
+            L[i] = L[T[index - 1]] + mum[0]
             T[index] = i
 
+    # looking for a longest increasing sequence (not neccessery with most MUMs)
+    # but the one that is the longest
+    index = 0;
+    for i in reversed(range(1, len(L))):
+        if (L[i] > L[index]):
+            index = i
+
     reversedFilteredMUMs = []
-    index = T[-1]
+
+    # reconstruct sequence  
     while(index != -1):
         reversedFilteredMUMs.append(maximas[index])
         index = R[index]
 
     reversedFilteredMUMs.reverse()
     return reversedFilteredMUMs
+
+
+
+def filterOverlappingMUMs(MUMs):
+    '''
+    Removes MUMs that are overlapping. Method naively filters MUMs with following cases:
+    
+    1st case: if two MUMs are overlaping, the longer MUM is selected
+
+    2nd case: if first MUM overlaps with the second one, and the second one is
+    overlapping with the third one, then the first MUM is selected and the second
+    one is skipped.
+    '''
+
+    filteredMUMs = []
+    skipNextMUM = false
+
+    length = len(MUMs)
+    for i in range(length):
+        if i + 1 < length:
+            pass
+            #2nd case
+            # if i + 2 < len: ... TO BE CONTINUED ... 
+
+
 
 
 
@@ -159,7 +205,7 @@ def SmithWaterman(a, b):
     Scores for mutation and hits are determine in inner method 'mutationCost'. 
     """
 
-    #TODO -> position as a class
+ 
 
     def mutationCost(x, y):
         """
