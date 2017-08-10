@@ -29,12 +29,11 @@ def getInputFromFile(fileName):
 ########################################################################
 
 # getting input file name 
-if (len(sys.argv) != 2):
+if len(sys.argv) != 2:
     print('Illegal input! Program takes exactly one argument.')
     exit(1)
 
 S1, S2, S, minimalMUMSize, splitIndex = getInputFromFile(sys.argv[1])
-
 suftab = makeSuftab(S)
 
 # we use ascii character for building suffix table, but for further  
@@ -47,6 +46,11 @@ S2 = S2.decode('utf-8')
 lcptab = kasaiLCPTable(S, suftab)
 bwttab = bwttabFromSuftab(S, suftab)
 maximas = findSupermaximals(lcptab, suftab, bwttab, minimalMUMSize, splitIndex)
+
+#=====================================================================================
+
+
+#====================================================================================
 
 ''' part two : selecting MUMs that create longest increasing sequence '''
 maximas.sort(key = lambda t : t[1])
@@ -65,6 +69,8 @@ print()
 
 
 
+
+
 ########################################################################
 ##                                                                    ##
 ##                          DEBUG    PRINTS                           ##
@@ -79,7 +85,7 @@ print()
 #     i, suftab[i], lcptab[i], S[suftab[i]:], bwttab[i]))
 # print()
 
-# print (maximas)
+
 
 # for tuple in maximas:
 #     mum = S[tuple[1] : tuple[1] + tuple[0]]
