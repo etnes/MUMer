@@ -7,4 +7,4 @@ advanced data structures and algorithms such SA-IS algorithm (suffix array - ind
 that creates suffix array in linear time, longest common prefix computation in O(nlogn) time, 
 Smith-Waterman algorithm for local genome alignment and so on. 
 
-Project is still not finised and there are still some bug to be fixed.
+Project is still not finished! Use only for demonstration purpose 
